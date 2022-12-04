@@ -70,24 +70,56 @@
 # Your puzzle answer was 861.
 
 def get_input(file):
+    """
+    [['20-45', '13-44'],[...]...]
+    :param file:
+    :return:
+    """
     with open(file, 'r') as f:
         lines = f.readlines()
         return [line.strip().split(',') for line in lines]
 
 
 def get_ranges(assmnt):
+    """
+    Takes the input file list created earlier and will create a list of lists with each range split by '-'
+    [[['20', '45'], ['13', '44']],[[...],[...]],...]
+    :param assmnt:
+    :return:
+    """
     return [[rnge[0].split('-'), rnge[1].split('-')] for rnge in assmnt]
 
 
 def get_nums(ranges):
+    """
+    takes the range list of list and splits into 4 nums, [Pair1 lower, upper, pair2 lower, upper] [[20, 45, 13, 44],[...]...]
+    :param ranges:
+    :return:
+    """
     return [[int(range[0][0]), int(range[0][1]), int(range[1][0]), int(range[1][1])] for range in ranges]
 
 
 def contained_pairs(ranges):
+    """
+    Sum up when either pair is contained withing the other pair:
+    lower1 is less/equal lower2 and upper1 is more/equal upper2 or  (1-5,2-4)
+    lower1 is more than lower2 and upper1 is less than upper2.      (2-3,1-5)
+    :param ranges:
+    :return:
+    """
     return sum([num[0] <= num[2] and num[1] >= num[3] or num[0] >= num[2] and num[1] <= num[3] for num in ranges])
 
 
 def overlap(ranges):
+    """
+    Sum up when overlap condition exists:
+    lower2 is less than lower1 is less than upper2 or (2-5,1-3)
+    lower2 is less than upper1 is less than upper3 or (2-3,2-5)
+    lower1 is less than lower2 is less than upper1 or (1-3,2-5)
+    lower1 is less than upper2 is less than upper1    (1-5,2-4)
+    :param ranges:
+    :return:
+    """
     return sum([num[2] <= num[0] <= num[3] or num[2] <= num[1] <= num[3] or num[0] <= num[2] <= num[1] or num[0] <= num[
         3] <= num[1] for num in ranges])
 
